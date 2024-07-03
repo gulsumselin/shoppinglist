@@ -65,7 +65,13 @@ public class MainActivity extends AppCompatActivity {
         String itemName = productEditText.getText().toString().trim();
         if (!itemName.isEmpty()) {
             Item item = new Item(itemName, radioButton.isChecked());
-            itemList.add(item);
+
+            if (item.isItemPriority()) {
+                itemList.add(0, item);
+            } else {
+                itemList.add(item);
+            }
+
             itemAdapter.notifyDataSetChanged();
             productEditText.setText("");
             radioButton.setChecked(false);
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Lütfen bir ürün adı girin!", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void goToProduct() {
         Intent intent = new Intent(MainActivity.this, ProductListActivity.class);
