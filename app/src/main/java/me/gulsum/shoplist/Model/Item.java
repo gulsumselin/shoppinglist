@@ -7,15 +7,18 @@ public class Item implements Parcelable {
 
     private String itemName;
     private boolean itemPriority;
+    private boolean isCompleted;
 
     public Item(String itemName, boolean itemPriority) {
         this.itemName = itemName;
         this.itemPriority = itemPriority;
+        this.isCompleted = false;
     }
 
     protected Item(Parcel in) {
         itemName = in.readString();
         itemPriority = in.readByte() != 0;
+        isCompleted = in.readByte() != 0;
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -46,6 +49,14 @@ public class Item implements Parcelable {
         this.itemPriority = itemPriority;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -55,17 +66,11 @@ public class Item implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(itemName);
         dest.writeByte((byte) (itemPriority ? 1 : 0));
+        dest.writeByte((byte) (isCompleted ? 1 : 0));
     }
 
     @Override
     public String toString() {
         return itemName + (itemPriority ? " (öncelikli)" : "");
-    }
-
-    public void setCompleted(boolean b) {
-    }
-
-    public boolean isCompleted() {
-        return false;
     }
 }

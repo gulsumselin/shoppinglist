@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && productEditText.getText().toString().equals("Ürün Adı Girin")) {
-                    productEditText.setText(""); // Metin "Ürün Adı Girin" ise sil
+                    productEditText.setText("");
                 }
             }
         });

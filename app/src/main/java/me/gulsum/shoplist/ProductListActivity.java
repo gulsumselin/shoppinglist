@@ -31,23 +31,36 @@ public class ProductListActivity extends AppCompatActivity {
         itemList = getIntent().getParcelableArrayListExtra("itemList");
 
         productListListView = findViewById(R.id.productListListView);
-        itemAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+        itemAdapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, itemList) {
+            @Override
+            public View getView(int position, View convertView, android.view.ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+
+                Item item = getItem(position);
+                if (item != null && item.isCompleted()) {
+                    textView.setPaintFlags(textView.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    textView.setPaintFlags(textView.getPaintFlags() & (~android.graphics.Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+
+                return view;
+            }
+        };
+
         productListListView.setAdapter(itemAdapter);
 
         productListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = view.findViewById(android.R.id.text1);
-                textView.setPaintFlags(textView.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
-
                 Item selectedItem = itemList.get(position);
                 selectedItem.setCompleted(true);
+                moveToBottom(position);
                 itemAdapter.notifyDataSetChanged();
 
                 Toast.makeText(ProductListActivity.this, "Ürün satın alındı: " + selectedItem.getItemName(), Toast.LENGTH_SHORT).show();
             }
         });
-
 
         finishShoppingButton = new Button(this);
         finishShoppingButton.setText("Alışverişi Bitir");
@@ -61,6 +74,11 @@ public class ProductListActivity extends AppCompatActivity {
                 navigateToHome();
             }
         });
+    }
+
+    private void moveToBottom(int position) {
+        Item item = itemList.remove(position);
+        itemList.add(item);
     }
 
     private void clearItemList() {
